@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aerospace Cybersecurity Workshop // DEFCON & Flight Operations Portal</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛰️</text></svg>">
+</head>
+<body>
+
+  <!-- Fixed Fullscreen Aerospace Satellite Background Theme -->
+  <div id="aerospace-fixed-bg" class="aerospace-fixed-bg" style="background-image: url('assets/aerospace-bg.jpg');"></div>
+  <!-- Live Wallpaper Interactive Canvas Layer -->
+  <canvas id="live-wallpaper-canvas" class="live-wallpaper-canvas"></canvas>
+  <div id="aerospace-bg-overlay" class="aerospace-bg-overlay vibrant"></div>
+
+  <!-- Top Navigation & Mission Control Header -->
+  <header class="site-header">
+    <div class="header-top">
+      <div class="logo-area">
+        <span class="logo-radar-icon">📡</span>
+        <div>
+          <h1 class="site-title">AERO-SEC <span>// CYBER OPERATIONS</span></h1>
+          <p class="site-subtitle">Avionics Buses &bull; ADS-B Spoofing &bull; Orbital Telemetry &bull; Ground Station Exploitation</p>
+        </div>
+      </div>
+
+      <!-- Workshop Master Run-of-Show Timer (45 Minutes) -->
+      <div class="header-timer-box">
+        <div class="timer-clock mono" id="timer-clock">45:00</div>
+        <div class="timer-meta">
+          <div class="timer-bar-track">
+            <div class="timer-bar-fill" id="timer-progress-fill"></div>
+          </div>
+          <span class="timer-active-badge mono" id="timer-active-mod">Active: Module 1 (Demystifying Aerospace)</span>
+        </div>
+        <div class="timer-btns">
+          <button class="btn btn-sm" id="btn-timer-toggle" title="Start/Pause 45-min workshop countdown">▶ Play</button>
+          <button class="btn btn-sm" id="btn-timer-reset" title="Reset countdown to 45 mins">↺</button>
+        </div>
+      </div>
+
+      <!-- Header Action Controls -->
+      <div class="header-actions">
+        <span class="badge info mono" style="font-size: 0.7rem; border-color: var(--border-cyan);">🛰️ LEO 580KM // 7.8 KM/S</span>
+        <button class="btn btn-sm btn-primary" id="btn-open-websdr-nav" title="Live Meteor &amp; Spacecraft Radar Tracking (CAMRAS WebSDR / GRAVES 143.050 MHz)">☄️ Live Radar: GRAVES</button>
+        <button class="btn btn-sm" id="btn-toggle-live-wp" title="Toggle Live Wallpaper Mode (Full Orbit / Calm Stars / Paused)">🪐 Live: Full Orbit</button>
+        <button class="btn btn-sm" id="btn-toggle-bg" title="Cycle background visibility (Vibrant / Balanced / Stealth)">🌌 BG: Vibrant</button>
+        <button class="btn btn-sm" id="btn-audio-toggle" title="Toggle tactical sound synthesizers">🔊 Audio On</button>
+        <button class="btn btn-sm" id="btn-open-shortcuts" title="Keyboard Shortcuts">⌨️ Shortcuts</button>
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="main-nav">
+      <button class="nav-tab active" data-view-nav="curriculum">
+        <span>📋</span> Workshop Curriculum &amp; Tracks
+      </button>
+      <button class="nav-tab" data-view-nav="slides">
+        <span>🖥️</span> Slide Presenter Deck (1–12)
+      </button>
+      <button class="nav-tab" data-view-nav="simulators">
+        <span>⚡</span> Interactive Simulators &amp; Radar
+      </button>
+      <button class="nav-tab" data-view-nav="ctf">
+        <span>🏁</span> Capstone &amp; CTF Starter Kit
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="container">
+
+    <!-- ==============================================================
+         VIEW 1: WORKSHOP CURRICULUM & TRACKS
+         ============================================================== -->
+    <section id="view-curriculum" class="view-section">
+      <!-- Hero Banner -->
+      <div class="hero-banner">
+        <div class="hero-header-row">
+          <div>
+            <span class="badge info mono">EXECUTIVE BRIEFING // 45-MINUTE MASTER WORKSHOP</span>
+            <h1 class="hero-title">Aerospace Cybersecurity: <span>Orbit to Avionics</span></h1>
+            <p class="hero-desc">
+              Demystifying satellites and aircraft as networked Linux boxes, legacy routers, and embedded serial buses. Explore open RF broadcasts, internal avionics buses, ground station attack surfaces, and software-defined radio tooling.
+            </p>
+            <div class="tracks-ribbon">
+              <span class="track-chip"><span>📡</span> <strong>Track 1:</strong> ADS-B 1090MHz RF</span>
+              <span class="track-chip"><span>🛰️</span> <strong>Track 2:</strong> SatCom RF &amp; Telemetry</span>
+              <span class="track-chip"><span>🌍</span> <strong>Track 3:</strong> Ground Station Exploits</span>
+              <span class="track-chip"><span>✈️</span> <strong>Track 4:</strong> ARINC 429 &amp; MIL-1553 Buses</span>
+            </div>
+          </div>
+          <div>
+            <button class="btn btn-primary" data-view-nav="slides" style="font-size: 1rem; padding: 0.75rem 1.5rem;">
+              🚀 Launch Slide Deck (Slide 1)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modules Grid (Dynamically rendered from data.js) -->
+      <div class="modules-grid" id="curriculum-modules-grid"></div>
+    </section>
+
+    <!-- ==============================================================
+         VIEW 2: SLIDE PRESENTER DECK (SLIDES 1–12)
+         ============================================================== -->
+    <section id="view-slides" class="view-section hidden">
+      <div class="slide-deck-wrapper">
+        <!-- Deck Navigation Bar -->
+        <div class="deck-nav-bar">
+          <div class="deck-nav-left">
+            <button class="btn btn-sm" id="btn-prev-slide" title="Previous Slide [Left Arrow]">← Prev</button>
+            <button class="btn btn-sm" id="btn-next-slide" title="Next Slide [Right Arrow / Space]">Next →</button>
+            <span class="slide-number-badge mono" id="slide-number-badge">Slide 1 of 12</span>
+            <span id="slide-track-badge"></span>
+          </div>
+          <div class="deck-nav-right">
+            <span class="badge warning mono" id="slide-duration-badge">⏱️ 3 mins</span>
+            <button class="btn btn-sm" id="btn-toggle-notes" title="Toggle Speaker Notes [S]">📝 Notes</button>
+            <button class="btn btn-sm" id="btn-fullscreen-deck" title="Toggle Fullscreen [F]">⛶ Fullscreen</button>
+          </div>
+        </div>
+
+        <!-- Slide Progress Bar -->
+        <div class="timer-bar-track" style="width: 100%; height: 4px; border-radius: 0;">
+          <div class="timer-bar-fill" id="slide-progress-fill" style="width: 8.33%;"></div>
+        </div>
+
+        <!-- Main Slide Card -->
+        <article class="deck-slide-card" id="deck-slide-card">
+          <div class="slide-top-meta">
+            <h2 class="slide-title" id="slide-title">Loading Slide...</h2>
+          </div>
+          <h3 class="slide-subtitle" id="slide-subtitle"></h3>
+          <div id="slide-dynamic-content"></div>
+        </article>
+
+        <!-- Speaker Notes Drawer -->
+        <aside class="speaker-notes-drawer" id="speaker-notes-drawer">
+          <div id="speaker-notes-content"></div>
+        </aside>
+
+        <!-- Slide Thumbnails Quick Navigation Rail -->
+        <div class="thumbnails-rail" id="slide-thumbnails-rail"></div>
+      </div>
+    </section>
+
+    <!-- ==============================================================
+         VIEW 3: INTERACTIVE SIMULATORS WORKBENCH
+         ============================================================== -->
+    <section id="view-simulators" class="view-section hidden">
+      <div class="sim-workbench-header">
+        <h2>Tactical Aerospace Simulators</h2>
+        <p>Real-time interactive environments simulating RF broadcast spoofing, avionics serial words, and orbital telemetry pass tracking.</p>
+      </div>
+
+      <!-- Simulator Tabs Switcher -->
+      <div class="sim-tabs-nav">
+        <button class="sim-tab-btn active" data-sim-tab="adsb">
+          📡 Track 1: ADS-B 1090MHz Radar &amp; Spoofing Sandbox
+        </button>
+        <button class="sim-tab-btn" data-sim-tab="avionics">
+          ✈️ Track 4: ARINC 429 &amp; MIL-STD-1553 Bus Inspector
+        </button>
+        <button class="sim-tab-btn" data-sim-tab="orbit">
+          🛰️ Tracks 2 &amp; 3: Orbit Pass, Waterfall &amp; Ground Station API
+        </button>
+        <button class="sim-tab-btn" data-sim-tab="websdr">
+          ☄️ Live Tracking: Meteor &amp; Spacecraft Radar (WebSDR / GRAVES 143.050 MHz)
+        </button>
+      </div>
+
+      <!-- PANEL 1: ADS-B 1090MHz Radar Simulator -->
+      <div class="sim-panel" id="sim-panel-adsb">
+        <div class="adsb-grid">
+          <!-- Canvas Radar Scope -->
+          <div class="radar-scope-wrapper">
+            <canvas id="radarCanvas"></canvas>
+            <div class="scope-controls">
+              <button class="btn btn-danger btn-sm" id="btn-inject-ghost">
+                ⚠️ Inject Ghost Aircraft (Spoof Mode S)
+              </button>
+              <button class="btn btn-sm" id="btn-clear-ghost">
+                Clear Injected Target
+              </button>
+              <button class="btn btn-primary btn-sm" id="btn-toggle-mlat">
+                Toggle MLAT (TDOA) Verification
+              </button>
+            </div>
+            <div id="adsb-sim-status" style="margin-top: 0.75rem; text-align: center;">
+              <span class="badge success">NORMAL AIRSPACE</span>
+              <span class="mono" style="font-size: 0.75rem; color: var(--text-muted);">MONITORING 1090 MHz BROADCASTS</span>
+            </div>
+          </div>
+
+          <!-- ADS-B Sidebar / Details / Packet Stream -->
+          <div class="adsb-sidebar">
+            <div class="card" id="adsb-target-info">
+              <div class="empty-state">Click any blip on the radar screen to inspect Mode S telemetry.</div>
+            </div>
+
+            <div class="card">
+              <div class="card-header" style="margin-bottom: 0.5rem;">
+                <h4 style="font-size: 0.85rem; color: var(--cyan);">📡 Real-Time Mode S Packet Stream (1090 MHz)</h4>
+                <span class="badge mono" style="font-size: 0.65rem;">1 Mbps PPM</span>
+              </div>
+              <div class="packet-feed-box mono" id="adsb-packet-feed"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 2: Avionics Bus Inspector (ARINC 429 & MIL-STD-1553) -->
+      <div class="sim-panel hidden" id="sim-panel-avionics">
+        <!-- Virtual Flight Instruments -->
+        <div class="virtual-instruments">
+          <div class="inst-gauge">
+            <div class="lbl">PRESSURE ALTITUDE (LABEL 203)</div>
+            <div class="val" id="inst-alt">32,000 FT</div>
+          </div>
+          <div class="inst-gauge">
+            <div class="lbl">PITCH ANGLE (LABEL 027)</div>
+            <div class="val" id="inst-pitch">+2.4°</div>
+          </div>
+          <div class="inst-gauge">
+            <div class="lbl">TRUE AIRSPEED (LABEL 210)</div>
+            <div class="val" id="inst-spd">450 KTS</div>
+          </div>
+        </div>
+
+        <div class="avionics-grid">
+          <!-- Live Bus Feed -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h4 style="font-size: 0.95rem; color: #fff;">Internal Avionics Bus Feed</h4>
+                <span class="mono" style="font-size: 0.75rem; color: var(--text-muted);">Click any row to dissect 32-bit word fields</span>
+              </div>
+              <div style="display: flex; gap: 0.35rem;">
+                <button class="proto-tab btn btn-sm active" data-proto="arinc429">ARINC 429</button>
+                <button class="proto-tab btn btn-sm" data-proto="mil1553">MIL-STD-1553</button>
+              </div>
+            </div>
+            <div class="bus-table mono" id="bus-feed"></div>
+          </div>
+
+          <!-- Word Crafter & Inspector -->
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="card" id="word-inspector-container">
+              <div class="empty-state">Select any word in the bus feed above to view bit breakdown.</div>
+            </div>
+
+            <!-- ARINC 429 Word Crafter -->
+            <div class="card">
+              <h4 style="font-size: 0.95rem; color: var(--cyan); margin-bottom: 0.75rem;">⚡ ARINC 429 Word Injector (Exploit Simulation)</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Label (Octal)</label>
+                  <select id="craft-label">
+                    <option value="203">203 - Pressure Altitude</option>
+                    <option value="027">027 - Flight Path Pitch Angle</option>
+                    <option value="210">210 - True Airspeed</option>
+                    <option value="320">320 - Magnetic Heading</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>SDI (Source/Dest Bits 9-10)</label>
+                  <select id="craft-sdi">
+                    <option value="00">00 - All Displays</option>
+                    <option value="01">01 - Captain PFD</option>
+                    <option value="10">10 - First Officer PFD</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Data Value</label>
+                  <input type="number" id="craft-data" value="12000" placeholder="e.g. 12000">
+                </div>
+                <div class="form-group">
+                  <label>SSM (Sign/Status Bits 30-31)</label>
+                  <select id="craft-ssm">
+                    <option value="00">00 - Normal Operation (Plus / North)</option>
+                    <option value="01">01 - No Computed Data (NCD)</option>
+                    <option value="10">10 - Functional Test</option>
+                    <option value="11">11 - Failure Warning</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem;">
+                <label style="font-size: 0.8rem; color: var(--amber); display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                  <input type="checkbox" id="craft-bad-parity"> Force Bad Parity Bit (Trigger LRU Fault)
+                </label>
+                <button class="btn btn-primary btn-sm" id="btn-inject-arinc">
+                  ⚡ Transmit Word on Bus
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: Orbit Pass & Ground Station API -->
+      <div class="sim-panel hidden" id="sim-panel-orbit">
+        <div class="orbit-grid">
+          <!-- Orbit Trajectory Canvas -->
+          <div class="canvas-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <h4 style="font-size: 0.9rem; color: #fff;">🛰️ Low Earth Orbit Pass (CUBESAT-01)</h4>
+              <span class="badge info mono">540 KM // INCLINATION 97.4°</span>
+            </div>
+            <canvas id="orbitCanvas"></canvas>
+            <div id="orbit-telemetry-box" style="margin-top: 0.75rem;"></div>
+          </div>
+
+          <!-- RF Waterfall Spectrogram Canvas -->
+          <div class="canvas-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <h4 style="font-size: 0.9rem; color: #fff;">📡 Downlink RF Waterfall Spectrogram</h4>
+              <span class="badge success mono">SDR FFT WATERFALL</span>
+            </div>
+            <canvas id="waterfallCanvas"></canvas>
+
+            <!-- Ground Station Attack Surface Panel -->
+            <div style="margin-top: 1rem; border-top: 1px solid var(--border-subtle); padding-top: 0.75rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h4 style="font-size: 0.85rem; color: var(--cyan);">Track 3: Ground Station Exposed REST API</h4>
+                <span class="badge success" id="gs-lock-badge">GROUND DISH: TRACKING NOMINAL</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.4rem 0;">
+                Exposed rotator endpoint: <code>POST /api/v1/antenna/override?azimuth=45.0&amp;elevation=10.0</code>
+              </p>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-danger btn-sm" id="btn-gs-override">
+                  💥 Send Malicious Rotor Command (Break Lock)
+                </button>
+                <button class="btn btn-sm" id="btn-gs-reset">
+                  ↺ Restore Normal Tracking
+                </button>
+              </div>
+              <div id="gs-api-response"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 4: Live Meteor & Spacecraft Radar (WebSDR / GRAVES 143.050 MHz & BRAMS 49.988 MHz) -->
+      <div class="sim-panel hidden" id="sim-panel-websdr">
+        <!-- Top Telemetry & Radio Status Bar -->
+        <div class="sdr-header-hud">
+          <div class="sdr-dish-info">
+            <span class="sdr-dish-badge">📡 CAMRAS 25m Radio Telescope (Dwingeloo Observatory, Netherlands)</span>
+            <span class="mono sdr-tracking-tag">tracking: <strong>showstand</strong></span>
+            <span class="mono sdr-coords" id="dwingeloo-azel">az: 30.001°  el: 30.000°</span>
+          </div>
+          <div class="sdr-status-right">
+            <span id="sdr-event-badge" class="badge info mono">RECEIVER MONITORING // 143.050 MHz GRAVES</span>
+            <span class="badge success mono">RECEIVER ONLINE (10 USERS)</span>
+          </div>
+        </div>
+
+        <!-- Presets and Stream Mode Switcher Ribbon -->
+        <div class="sdr-presets-bar">
+          <div class="sdr-presets-list">
+            <span class="sdr-preset-label">RF PRESETS:</span>
+            <button class="btn btn-sm active" data-sdr-preset="graves" title="GRAVES Space Surveillance Radar 143.050 MHz CW (Active in screenshot)">
+              🛰️ 1. GRAVES Space Radar (143.050 MHz CW)
+            </button>
+            <button class="btn btn-sm" data-sdr-preset="brams" title="BRAMS Belgian Radio Meteor Beacon 49.98850 MHz USB (User prompt URL)">
+              ☄️ 2. BRAMS Meteor Beacon (49.98850 MHz USB)
+            </button>
+            <button class="btn btn-sm" data-sdr-preset="lusat" title="LUSAT / OSCAR-19 Satellite CW Downlink 143.078 MHz">
+              🛰️ 3. LUSAT / OSCAR-19 (143.078 MHz)
+            </button>
+            <button class="btn btn-sm" data-sdr-preset="sat70cm" title="CAMRAS 70cm Amateur Satellite Downlinks 436.650 MHz">
+              📡 4. 70cm Satellite Band (436.650 MHz)
+            </button>
+          </div>
+          <div class="sdr-stream-actions">
+            <button class="btn btn-sm btn-primary" id="btn-toggle-sdr-stream">
+              📡 Switch to Embedded Live WebSDR Stream
+            </button>
+            <a href="http://websdr.camras.nl:8901/?tune=49988.50usb" target="_blank" rel="noopener noreferrer" class="btn btn-sm" style="text-decoration:none;" title="Open CAMRAS WebSDR directly in a new tab">
+              ↗ Open WebSDR Tab
+            </a>
+          </div>
+        </div>
+
+        <p id="sdr-preset-desc" class="sdr-desc-line">
+          <strong>GRAVES Space Surveillance Radar:</strong> French military bistatic radar (143.050 MHz CW) detecting satellites, space debris &amp; meteor ionization reflections.
+        </p>
+
+        <!-- Main Display: Canvas Radar Spectrogram OR Embedded WebSDR Iframe -->
+        <div class="card sdr-display-card">
+          <!-- Tactical Canvas Spectrogram View (Default) -->
+          <div id="sdr-canvas-wrapper" class="sdr-canvas-wrap">
+            <div class="sdr-canvas-top-meta">
+              <span class="mono" style="font-size: 0.75rem; color: var(--cyan);">RF WATERFALL SPECTROGRAM // FFT 512 BINS // REAL-TIME DOPPLER SCATTER</span>
+              <span class="mono" style="font-size: 0.75rem; color: var(--amber);">GRAVES BEACON: 143.050 MHz</span>
+            </div>
+            <canvas id="sdrWaterfallCanvas" class="sdr-canvas" width="900" height="260"></canvas>
+            <div class="sdr-freq-legend mono">
+              <span>143.020 MHz</span>
+              <span style="color: var(--amber); font-weight: 700;">▲ 143.050 MHz (GRAVES Carrier)</span>
+              <span>143.070 MHz (Aux)</span>
+              <span>143.078 MHz (LUSAT)</span>
+              <span>143.120 MHz</span>
+            </div>
+          </div>
+
+          <!-- Embedded Live WebSDR Iframe View (Toggleable) -->
+          <div id="sdr-iframe-wrapper" class="sdr-iframe-wrap hidden">
+            <div class="sdr-iframe-notice">
+              <span>🔴 Live Stream from Dwingeloo Radio Observatory (http://websdr.camras.nl:8901)</span>
+              <span class="mono">25-Meter Parabolic Dish</span>
+            </div>
+            <iframe id="websdr-live-iframe" src="http://websdr.camras.nl:8901/?tune=143050cw" title="CAMRAS Live WebSDR" allow="autoplay; audio" class="sdr-iframe"></iframe>
+          </div>
+
+          <!-- WebSDR Receiver Controls (Identical layout to screenshot) -->
+          <div class="sdr-receiver-deck">
+            <!-- Row 1: Frequency, Tuning Steps, Modes, Volume -->
+            <div class="sdr-ctrl-row">
+              <div class="sdr-freq-tuning-box">
+                <button class="btn btn-sm sdr-step-btn" id="btn-step-m3" title="-10.0 kHz">---</button>
+                <button class="btn btn-sm sdr-step-btn" id="btn-step-m2" title="-1.0 kHz">--</button>
+                <button class="btn btn-sm sdr-step-btn" id="btn-step-m1" title="-0.1 kHz">-</button>
+                <div class="sdr-freq-input-wrap">
+                  <input type="number" id="sdr-freq-input" class="sdr-freq-input mono" value="143050.00" step="0.01">
+                  <span class="sdr-unit">kHz</span>
+                </div>
+                <button class="btn btn-sm sdr-step-btn" id="btn-step-p1" title="+0.1 kHz">+</button>
+                <button class="btn btn-sm sdr-step-btn" id="btn-step-p2" title="+1.0 kHz">++</button>
+                <button class="btn btn-sm sdr-step-btn" id="btn-step-p3" title="+10.0 kHz">+++</button>
+                <button class="btn btn-sm" id="btn-vfo-ab" title="Toggle VFO A / B">A/B</button>
+                <button class="btn btn-sm" id="btn-vfo-copy" title="Copy VFO">A-&gt;B</button>
+              </div>
+
+              <!-- Demodulation Modes -->
+              <div class="sdr-mode-btn-group">
+                <button class="btn btn-sm active" data-sdr-mode="CW">CW</button>
+                <button class="btn btn-sm" data-sdr-mode="LSB">LSB</button>
+                <button class="btn btn-sm" data-sdr-mode="USB">USB</button>
+                <button class="btn btn-sm" data-sdr-mode="AM">AM</button>
+                <button class="btn btn-sm" data-sdr-mode="FM">FM</button>
+                <button class="btn btn-sm" data-sdr-mode="AMsync">AMsync</button>
+              </div>
+
+              <!-- Volume & Mute -->
+              <div class="sdr-vol-box">
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Volume:</span>
+                <input type="range" id="sdr-volume-slider" min="0" max="100" value="75" style="width: 80px;">
+                <label style="font-size: 0.75rem; display: flex; align-items: center; gap: 0.25rem; color: var(--text-muted); cursor: pointer;">
+                  <input type="checkbox" id="sdr-mute-toggle"> mute
+                </label>
+              </div>
+            </div>
+
+            <!-- Row 2: Band Radios (as shown in screenshot) -->
+            <div class="sdr-band-row">
+              <span class="sdr-label-inline">Band:</span>
+              <div class="sdr-band-options mono">
+                <label><input type="radio" name="sdr-band" value="70cm sat"> 70cm sat</label>
+                <label><input type="radio" name="sdr-band" value="70cm EME"> 70cm EME</label>
+                <label><input type="radio" name="sdr-band" value="70cm T"> 70cm T</label>
+                <label><input type="radio" name="sdr-band" value="2m"> 2m</label>
+                <label class="selected-band"><input type="radio" name="sdr-band" value="graves" checked> graves</label>
+                <label><input type="radio" name="sdr-band" value="aero"> aero</label>
+                <label><input type="radio" name="sdr-band" value="4m"> 4m</label>
+                <label><input type="radio" name="sdr-band" value="6m"> 6m</label>
+                <label><input type="radio" name="sdr-band" value="lofar"> lofar</label>
+                <label><input type="radio" name="sdr-band" value="8m"> 8m</label>
+                <label><input type="radio" name="sdr-band" value="jove"> jove</label>
+                <label><input type="radio" name="sdr-band" value="VLF"> VLF</label>
+              </div>
+            </div>
+
+            <!-- Row 3: Filter Bandwidth, DSP Checks, S-Meter -->
+            <div class="sdr-dsp-row">
+              <div class="sdr-filter-box">
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Filter: <strong id="sdr-filter-disp" style="color: var(--cyan);">0.40 kHz</strong></span>
+                <button class="btn btn-sm" id="btn-filter-narrow">narrower</button>
+                <button class="btn btn-sm" id="btn-filter-wide">wider</button>
+              </div>
+
+              <div class="sdr-checks-box">
+                <label><input type="checkbox" id="chk-squelch"> squelch</label>
+                <label><input type="checkbox" id="chk-autonotch"> autonotch</label>
+                <label><input type="checkbox" id="chk-noisered"> noise reduction</label>
+              </div>
+
+              <!-- S-Meter Green Bar (Screenshot recreation) -->
+              <div class="sdr-smeter-container">
+                <div class="sdr-smeter-ticks mono">
+                  <span>S1</span><span>S3</span><span>S5</span><span>S7</span><span>S9</span><span>+10</span><span>+20</span><span>+30</span>
+                </div>
+                <div class="sdr-smeter-bar-wrapper">
+                  <div class="sdr-smeter-fill" id="sdr-smeter-bar"></div>
+                </div>
+                <span class="mono sdr-smeter-text" id="sdr-smeter-val">-100.2 dB: peak -100.2 dB</span>
+              </div>
+            </div>
+
+            <!-- Row 4: Waterfall Settings Bar & Manual Action Triggers -->
+            <div class="sdr-settings-action-row">
+              <div class="sdr-wf-settings-group">
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Speed:</span>
+                <label><input type="radio" name="wf-speed" value="slow" checked> slow</label>
+                <label><input type="radio" name="wf-speed" value="medium"> medium</label>
+                <label><input type="radio" name="wf-speed" value="fast"> fast</label>
+                <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem;">View:</span>
+                <label><input type="radio" name="wf-view" value="waterfall" checked> waterfall</label>
+                <label><input type="radio" name="wf-view" value="spectrum"> spectrum</label>
+                <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 0.5rem;">Brightness:</span>
+                <input type="range" id="sdr-brightness-slider" min="10" max="90" value="50" style="width: 70px;">
+                <label style="font-size: 0.75rem; margin-left: 0.35rem; display: flex; align-items: center; gap: 0.25rem; cursor: pointer;">
+                  <input type="checkbox" id="sdr-contrast-chk"> More contrast
+                </label>
+              </div>
+
+              <div class="sdr-triggers-group">
+                <button class="btn btn-warning btn-sm" id="btn-trigger-meteor" title="Simulate a meteor ionizing trail reflection ping">
+                  ☄️ Trigger Meteor Trail Echo
+                </button>
+                <button class="btn btn-primary btn-sm" id="btn-trigger-sat" title="Simulate an active satellite passing through the radar beam">
+                  🛰️ Track Satellite Doppler Pass
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lower Grid: Active Spacecraft HUD & Live Meteor Detection Log -->
+        <div class="sdr-lower-grid">
+          <!-- Left: Satellite Pass HUD & Space Domain Awareness Briefing -->
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <!-- Active Spacecraft HUD -->
+            <div class="card" id="sdr-satellite-hud">
+              <div class="sat-hud-card">
+                <div class="sat-hud-header">
+                  <div>
+                    <h4 style="color: #fff; font-size: 1.05rem;">🛰️ ISS (Zarya - International Space Station)</h4>
+                    <span class="mono" style="font-size: 0.75rem; color: var(--cyan);">NORAD ID: 25544 // LEO INCLINATION 51.6°</span>
+                  </div>
+                  <span class="badge success mono">RADAR REFLECTION LOCK</span>
+                </div>
+                <div class="sat-hud-grid">
+                  <div class="hud-stat"><span class="lbl">RADIAL VELOCITY</span><span class="val mono">7.66 km/s</span></div>
+                  <div class="hud-stat"><span class="lbl">DOPPLER SHIFT</span><span class="val mono" style="color: var(--amber);">+1,240 Hz</span></div>
+                  <div class="hud-stat"><span class="lbl">TARGET ALTITUDE</span><span class="val mono">418 km</span></div>
+                  <div class="hud-stat"><span class="lbl">RADAR CROSS SECTION</span><span class="val mono">400 m²</span></div>
+                  <div class="hud-stat"><span class="lbl">PASS DURATION</span><span class="val mono">~4.8 min</span></div>
+                  <div class="hud-stat"><span class="lbl">REFLECTED BEACON</span><span class="val mono" style="color: var(--cyan);">143.050 MHz</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SIGINT / Electronic Warfare Analysis Box -->
+            <div class="card">
+              <h4 style="font-size: 0.95rem; color: var(--cyan); margin-bottom: 0.5rem;">
+                🛡️ Electronic Warfare: Passive Bistatic Space Radar (GRAVES &amp; BRAMS)
+              </h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+                The French <strong>GRAVES radar</strong> (Grand Réseau Adapté à la Veille Spatiale) transmits a 143.050 MHz CW beam upward. Receiving stations like CAMRAS in Dwingeloo intercept reflections off space targets <em>passively</em>—detecting satellites, ballistic launches, and meteor trails with zero RF emissions of their own.
+              </p>
+              <div class="deck-code-block" style="margin: 0.5rem 0;">
+                <div class="code-title mono">bash - Local SDR Meteor &amp; Space Radar Capture</div>
+                <pre><code># Capture raw I/Q samples from GRAVES 143.050 MHz with RTL-SDR:
+rtl_sdr -f 143050000 -s 2048000 -g 42 graves_capture.bin
+
+# Audio demodulation with sox to isolate Doppler whistle:
+sox -t raw -r 2048000 -e float -c 2 graves_capture.bin -t wav doppler.wav bandpass 143050 400</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Real-time Meteor Forward-Scatter Detection Log -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 0.5rem;">
+              <div>
+                <h4 style="font-size: 0.95rem; color: #fff;">☄️ Real-Time Meteor Scatter Detection Log</h4>
+                <span class="mono" style="font-size: 0.75rem; color: var(--text-muted);">
+                  Ionization trail reflections recorded on 143.050 MHz CW
+                </span>
+              </div>
+              <span class="badge info mono">AUTO-CORRELATION ACTIVE</span>
+            </div>
+
+            <div class="table-responsive" style="max-height: 440px; overflow-y: auto;">
+              <table class="meteor-table mono">
+                <thead>
+                  <tr>
+                    <th>UTC</th>
+                    <th>Freq (kHz)</th>
+                    <th>Doppler</th>
+                    <th>Duration</th>
+                    <th>Peak SNR</th>
+                    <th>Velocity</th>
+                    <th>Trail Classification</th>
+                  </tr>
+                </thead>
+                <tbody id="sdr-meteor-table-body">
+                  <!-- Dynamically populated rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================================
+         VIEW 4: CAPSTONE CTF & TOOLING
+         ============================================================== -->
+    <section id="view-ctf" class="view-section hidden">
+      <!-- CTF Header Banner -->
+      <div class="ctf-header-banner">
+        <div>
+          <span class="badge info mono">OPERATION SKYSHIELD // CAPSTONE MISSIONS</span>
+          <h2 style="font-size: 1.5rem; color: #fff; margin-top: 0.25rem;">Aerospace Cyber Flag Submission Hub</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">
+            Analyze intercepted Mode S aviation packets, decode downlinked CCSDS space telemetry, and exploit ground APIs.
+          </p>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">MISSION SCORE</span>
+          <div class="ctf-score-display mono" id="ctf-total-score">0 / 600 PTS (0 of 3 Cleared)</div>
+        </div>
+      </div>
+
+      <!-- Telemetry Hex Decoder Widget -->
+      <div class="decoder-box">
+        <h3 style="font-size: 1.1rem; color: #fff;">🔬 Interactive Telemetry &amp; Protocol Hex Decoder</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Paste any raw hex string from ADS-B Mode S, CCSDS Space Packets, or ARINC 429 to dissect fields or extract hidden flags.
+        </p>
+        <div class="decoder-inputs">
+          <select id="decoder-preset-select">
+            <option value="">-- Or Load a Telemetry Sample Preset --</option>
+            <option value="8D40621D58C382D690C8AC2863A7">Preset 1: Mode S ADS-B Extended Squitter (112 bits)</option>
+            <option value="1ACFFC1D08A2C001001B464C41477B53504143455F5041434B45545F53594E437DCB84">Preset 2: CCSDS Space Packet with Flag Payload</option>
+            <option value="E00182C3">Preset 3: ARINC 429 32-bit Word (Label 303)</option>
+          </select>
+          <input type="text" id="decoder-hex-input" class="mono" placeholder="Paste Hex e.g. 1ACFFC1D...">
+          <button class="btn btn-primary" id="btn-decode-hex">Decode Frame</button>
+        </div>
+        <div id="decoder-result"></div>
+      </div>
+
+      <!-- Challenges List -->
+      <div class="challenges-list" id="ctf-challenges-list"></div>
+
+      <!-- Starter Kit Cheat Sheet -->
+      <div class="cheat-sheet-section">
+        <h3 style="font-size: 1.1rem; color: #fff; margin-bottom: 0.75rem;">🧰 Aerospace Hacker Starter Kit CLI Cheat Sheet</h3>
+        <div id="cheat-sheet-content"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Keyboard Shortcuts Modal Dialog -->
+  <div class="modal-overlay hidden" id="modal-shortcuts">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="color: #fff; font-size: 1.15rem;">⌨️ Presenter Keyboard Shortcuts</h3>
+        <button class="btn btn-sm" id="btn-close-shortcuts">&times;</button>
+      </div>
+      <div class="shortcuts-list">
+        <div class="shortcut-item">
+          <span>Advance to Next Slide</span>
+          <kbd>&rarr; or Space</kbd>
+        </div>
+        <div class="shortcut-item">
+          <span>Go to Previous Slide</span>
+          <kbd>&larr;</kbd>
+        </div>
+        <div class="shortcut-item">
+          <span>Toggle Speaker Notes Drawer</span>
+          <kbd>S</kbd>
+        </div>
+        <div class="shortcut-item">
+          <span>Toggle Fullscreen Slide Deck</span>
+          <kbd>F</kbd>
+        </div>
+        <div class="shortcut-item">
+          <span>Toggle Tactical Audio Synthesizers</span>
+          <kbd>Audio Button</kbd>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width: 100%;" onclick="document.getElementById('modal-shortcuts').classList.add('hidden')">
+        Close Shortcuts
+      </button>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
